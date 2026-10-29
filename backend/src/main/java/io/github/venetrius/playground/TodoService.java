@@ -16,6 +16,13 @@ public class TodoService {
     todos.add(todo.strip());
   }
 
+  public void addAll(List<String> items) {
+    Objects.requireNonNull(items, "items must not be null");
+    for (int i = 1; i < items.size(); i++) {
+      add(items.get(i));
+    }
+  }
+
   public List<String> list() {
     return List.copyOf(todos);
   }
