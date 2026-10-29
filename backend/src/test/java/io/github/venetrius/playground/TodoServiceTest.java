@@ -1,6 +1,7 @@
 package io.github.venetrius.playground;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -27,5 +28,14 @@ class TodoServiceTest {
     service.add("ship it");
     assertTrue(service.remove("ship it"));
     assertTrue(service.list().isEmpty());
+  }
+
+  @Test
+  void reportsEmptiness() {
+    assertTrue(service.isEmpty());
+    service.add("one");
+    assertFalse(service.isEmpty());
+    service.remove("one");
+    assertTrue(service.isEmpty());
   }
 }
