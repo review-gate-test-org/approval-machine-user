@@ -43,6 +43,8 @@ jobs:
         env:
           MACHINE_USER_TOKEN: ${{ secrets.MACHINE_USER_TOKEN }}
         with:
+          # Transient 5xx errors failed all three runs once; getOctokit clients inherit this retry count.
+          retries: 3
           script: |
             if (!process.env.MACHINE_USER_TOKEN) return core.setFailed('MACHINE_USER_TOKEN is not set in the machine-user-approval environment');
             const botApi = getOctokit(process.env.MACHINE_USER_TOKEN);

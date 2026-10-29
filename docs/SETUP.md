@@ -108,7 +108,8 @@ gh run list -R ORG/REPO -w machine-user-approval.yml -L1   # expect: success
 
 A green run means the token authenticated. With no open PRs it approves nothing. Then open a PR
 that touches only bot-owned paths. When Copilot's review is 🟢, the bot should approve within
-about 30 s, or at the next 15-min sweep if Copilot took longer than 15 min.
+about 30 s. If Copilot takes longer than 15 min, the 15-min schedule is the fallback. It had not fired
+here yet (see the README), so run `gh workflow run machine-user-approval.yml` by hand if needed.
 
 ## Rotation
 
