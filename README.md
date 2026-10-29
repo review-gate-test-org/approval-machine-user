@@ -17,6 +17,10 @@ cd client && npm ci && npm run lint && npm run build
 node --test .github/machine-user-approval/approve.test.js
 ```
 
+## Behavior
+
+Todos are trimmed when added. `remove` trims its argument the same way, so `remove("  ship it ")` removes `"ship it"`.
+
 ## What this path tries to prove
 
 A regular GitHub account (`venetrius-review-bot`) can turn Copilot's 🟢 into a real approval that
