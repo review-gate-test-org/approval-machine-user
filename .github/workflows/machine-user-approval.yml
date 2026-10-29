@@ -1,0 +1,49 @@
+name: Machine user approval
+
+# The machine user (secret MACHINE_USER_TOKEN) approves a PR once Copilot code review approved its head
+# commit and the machine user is a code owner of every changed file. See .github/machine-user-approval/approve.js.
+#
+# No pull_request_review trigger: GitHub holds runs triggered by Copilot for manual approval. Instead,
+# the run started by the author's push waits up to 15 min for Copilot's review of that commit.
+#
+# Security: pull_request_target and schedule run the default branch's workflow and script, never PR code.
+# The token lives in the `machine-user-approval` environment, which only the default branch can use.
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+  schedule:
+    # Fallback for Copilot reviews that arrive after the 15-min wait.
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  # A newer push cancels the waiting run for the older commit.
+  group: machine-user-approval-${{ github.event.pull_request.number || 'sweep' }}
+  cancel-in-progress: true
+
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: read
+    environment:
+      name: machine-user-approval
+      deployment: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          sparse-checkout: .github/machine-user-approval
+          persist-credentials: false
+      - uses: actions/github-script@v9
+        env:
+          MACHINE_USER_TOKEN: ${{ secrets.MACHINE_USER_TOKEN }}
+        with:
+          script: |
+            if (!process.env.MACHINE_USER_TOKEN) return core.setFailed('MACHINE_USER_TOKEN is not set in the machine-user-approval environment');
+            const botApi = getOctokit(process.env.MACHINE_USER_TOKEN);
+            await require('./.github/machine-user-approval/approve.js').run({ github, botApi, context, core });

@@ -1,0 +1,7 @@
+# Last matching line wins.
+# Human catch-all: everything not listed below, including .github/, README.md and agent instruction files.
+*          @venetrius @JacobiCamunda
+
+# The machine user is a code owner of /backend/ only, so its approval satisfies code-owner review there and nowhere else.
+/backend/  @review-gate-test-org/backend @venetrius-review-bot
+/client/   @review-gate-test-org/frontend
