@@ -24,6 +24,7 @@ public class TodoService {
     return todos.remove(todo);
   }
 
+  /** Returns true if there are no todos. */
   public boolean isEmpty() {
     return todos.isEmpty();
   }
