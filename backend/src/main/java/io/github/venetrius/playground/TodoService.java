@@ -23,4 +23,8 @@ public class TodoService {
   public boolean remove(String todo) {
     return todos.remove(todo);
   }
+
+  public boolean isEmpty() {
+    return todos.isEmpty();
+  }
 }
