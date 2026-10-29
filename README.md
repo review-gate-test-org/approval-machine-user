@@ -25,6 +25,8 @@ native "code owner review required" rule decides mergeability.
 
 ## How it's configured
 
+Step-by-step setup to replicate this repo: [docs/SETUP.md](docs/SETUP.md).
+
 - **Ruleset on `main`**: PR required, 1 approval, code-owner review required, stale approvals dismissed
   on push, required checks `backend` and `client`, Copilot automatic review on push.
 - **CODEOWNERS**: the bot is listed only on `/backend/`. A human catch-all owns everything else,
@@ -35,6 +37,9 @@ native "code owner review required" rule decides mergeability.
   file, no file is hard-denied in [`approve.js`](.github/machine-user-approval/approve.js), and the bot is not the author.
 - **Token**: fine-grained PAT owned by the bot, scoped to this repo (Pull requests: read & write,
   Contents: read), stored as `MACHINE_USER_TOKEN` in environment `machine-user-approval` (branch `main` only).
+- **Copilot setting** (UI only): "Allow Copilot to approve pull requests" **on** (a single setting, which also makes
+  Copilot's approvals count toward merge requirements), path limit `backend/**`. Copilot's approval can't satisfy
+  code-owner review, so the bot's approval is still what unblocks the merge.
 - **No `pull_request_review` trigger**: GitHub holds runs triggered by Copilot as "Approve workflows to run".
   The run started by the author's push waits up to 15 min for Copilot's review of that commit. A
   15-min schedule picks up later reviews.
