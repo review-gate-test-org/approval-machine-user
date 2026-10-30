@@ -28,4 +28,11 @@ class TodoServiceTest {
     assertTrue(service.remove("ship it"));
     assertTrue(service.list().isEmpty());
   }
+
+  @Test
+  void removesTodoIgnoringSurroundingWhitespace() {
+    service.add("ship it");
+    assertTrue(service.remove("  ship it "));
+    assertTrue(service.list().isEmpty());
+  }
 }

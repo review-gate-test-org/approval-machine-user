@@ -21,6 +21,7 @@ public class TodoService {
   }
 
   public boolean remove(String todo) {
-    return todos.remove(todo);
+    Objects.requireNonNull(todo, "todo must not be null");
+    return todos.remove(todo.strip());
   }
 }
