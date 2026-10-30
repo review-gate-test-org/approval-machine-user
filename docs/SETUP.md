@@ -15,7 +15,12 @@ Replace `ORG`, `REPO` and `BOT` below with your values.
    - [`.github/workflows/machine-user-approval.yml`](../.github/workflows/machine-user-approval.yml): the workflow
    - [`.github/machine-user-approval/approve.js`](../.github/machine-user-approval/approve.js): the decision logic and the hard-deny list
    - [`.github/machine-user-approval/approve.test.js`](../.github/machine-user-approval/approve.test.js): unit tests (`node --test`)
+   - [`.github/machine-user-approval/ruleset.json`](../.github/machine-user-approval/ruleset.json): the ruleset applied in step 5
+   - [`.github/workflows/ci.yml`](../.github/workflows/ci.yml): CI whose jobs `backend` and `client` are the required checks
    - [`.github/CODEOWNERS`](../.github/CODEOWNERS)
+
+   If your CI has different job names, edit `required_status_checks` in `ruleset.json` to match
+   **before** step 5. Otherwise every PR waits forever for checks that never report.
 2. In CODEOWNERS, list the bot **by name** only on the paths it may approve, and give every
    other path, including the catch-all `*`, to humans:
    ```
@@ -85,7 +90,7 @@ gh api -X POST repos/ORG/REPO/rulesets --input .github/machine-user-approval/rul
 [`ruleset.json`](../.github/machine-user-approval/ruleset.json) sets these rules: a PR is
 required with 1 approval, **code-owner review required**, stale approvals dismissed on push,
 required checks `backend` and `client` (GitHub Actions), and **Copilot automatic review on
-push**. It has no bypass actors. Change the required checks to match your CI jobs.
+push**. It has no bypass actors. Run the command from a checkout that has `ruleset.json` (step 1).
 
 ## 6. Let Copilot submit real approvals (owner, UI only)
 
